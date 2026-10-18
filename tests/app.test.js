@@ -101,18 +101,21 @@ test('learning app interactions in a lightweight DOM', async t => {
     assert.equal(window.closeRavanLesson(), false);
     assert.match(document.querySelector('.category-card[data-id="restaurant"]').textContent, /۱ یادگرفته/);
   });
-  await t.test('filters and bilingual search narrow categories and sentences', () => {
-    click('[data-action="filter"][data-group="travel"]');
-    assert.equal(document.querySelectorAll('.category-card').length, 5);
-    click('[data-action="filter"][data-group="all"]');
-    input('Menü');
-    assert.equal(document.querySelectorAll('.category-card').length, 1);
-    assert.ok(document.querySelector('.search-matches .phrase-row'));
-    input('<img src=x onerror=alert(1)>');
-    assert.equal(document.querySelectorAll('#main img').length, 0);
-    assert.ok(document.querySelector('.empty-state'));
-    input('');
+  await t.test('home shows one unified list of ten situations without search or group filters', () => {
     assert.equal(document.querySelectorAll('.category-card').length, 10);
+    assert.equal(document.querySelector('.search-box'), null);
+    assert.equal(document.querySelector('.filter-row'), null);
+    assert.equal(document.querySelectorAll('[data-action="filter"]').length, 0);
+  });
+  await t.test('random sample opens a phrase from any category and labels its category', () => {
+    const originalRandom = Math.random;
+    Math.random = () => 0.99;
+    click('[data-action="sample"]');
+    assert.equal(dialog.open, true);
+    assert.equal(document.querySelector('.lesson-position').textContent.includes('۱ از ۱'), true);
+    assert.match(document.querySelector('.phrase-category').textContent, /دسته:/);
+    click('[data-action="close-lesson"]');
+    Math.random = originalRandom;
   });
   await t.test('saved flashcards remain reviewable and can be removed', () => {
     click('[data-action="navigate"][data-page="favorites"]');
@@ -133,6 +136,9 @@ test('learning app interactions in a lightweight DOM', async t => {
   });
   await t.test('settings persist and reset requires confirmation', () => {
     click('[data-action="navigate"][data-page="settings"]');
+    assert.equal(document.querySelector('.page-title h1')?.textContent, 'یه یادگیری شخصی‌تر');
+    assert.equal(document.body.textContent.includes('همراه همیشگی تو'), false);
+    assert.equal(document.body.textContent.includes('افزودن به صفحه اصلی'), false);
     click('[data-action="goal"][data-value="10"]');
     click('[data-action="rate"][data-value="1"]');
     assert.equal(stored().goal, 10);

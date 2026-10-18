@@ -4,7 +4,7 @@
         <intent><action android:name="android.intent.action.TTS_SERVICE" /></intent>
     </queries>
     <application
-        android:label="روان"
+        android:label="آموزش کاربردی ترکی استانبولی"
         android:icon="@drawable/ic_launcher"
         android:allowBackup="false"
         android:supportsRtl="true"
