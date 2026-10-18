@@ -66,6 +66,10 @@ test('offline worker caches all delivered app files and isolates its scope', asy
 test('Android wrapper restricts content to local assets and uses Turkish TTS', async () => {
   const kotlin = await readFile(new URL('android/app/src/main/java/ir/ravan/app/MainActivity.kt', root), 'utf8');
   const manifest = await readFile(new URL('android/app/src/main/AndroidManifest.xml', root), 'utf8');
+  const build = await readFile(new URL('android/app/build.gradle.kts', root), 'utf8');
+  assert.match(kotlin, /cacheMode = android\.webkit\.WebSettings\.LOAD_NO_CACHE/);
+  assert.match(build, /versionCode = 2/);
+  assert.match(build, /versionName = "1\.1\.0"/);
   assert.match(kotlin, /allowFileAccess = false/);
   assert.match(kotlin, /allowContentAccess = false/);
   assert.match(kotlin, /blockNetworkLoads = true/);

@@ -63,6 +63,9 @@ class MainActivity : Activity() {
             settings.allowContentAccess = false
             settings.mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW
             settings.blockNetworkLoads = true
+            settings.cacheMode = android.webkit.WebSettings.LOAD_NO_CACHE
+            clearCache(true)
+            clearHistory()
             settings.javaScriptCanOpenWindowsAutomatically = false
             webChromeClient = WebChromeClient()
             addJavascriptInterface(SpeechBridge(), "AndroidSpeech")
